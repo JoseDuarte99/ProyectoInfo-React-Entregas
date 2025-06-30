@@ -1,12 +1,16 @@
-
 // TIPING THE PRODUCT-CARD
-type ProductCardProps = {
+export type ProductCardProps = {
+    key: number;
+    category: string;
     img: string;
     title: string;
     previousPrice?: number;
     price: number;
     priceInfo?: string;
     shippingInfo?: string;
+    onClickAdd?: () => void;
+    onClickRemove?: () => void;
+    onCar?: number;
 };
 
 // TIPING THE TITLE-SECTION
@@ -25,42 +29,55 @@ type SectionProps = {
 type SearchProps = {
     placeholder?: string;
     imgSearch?: string;
+    onSearch: string;
+    setOnSearch: React.Dispatch<React.SetStateAction<string>>;
 };
 
 // TIPING THE BUTTON-CUSTOM
 type ButtonCustomProps = {
     textButton?: string;
     className?: string;
-    hrefButton: string;
+    hrefButton?: string;
 };
 
 // ------------------------------------------------------ COMPONENTS
 
 // COMPONENT PRODUCT-CARD
 export function ProductCard(props: ProductCardProps) {
-    const { img, title,previousPrice, price, priceInfo, shippingInfo } = props
-    
+    const { img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, onCar} = props
+
     return (
-        <>
-        <a className="max-w-[9.2rem]" href="#">
-        <img className="h-[8rem] w-[10rem] p-2" src={img} alt={title} />
-        <h3 className="text-neutral-700 text-left text-medium mb-4 pr-2 pt-5 font-sans">
-        {title}
-        </h3>
-        <p className="text-neutral-500 text-left text-xs line-through font-sans">
-        {previousPrice !== undefined ? `$${previousPrice}` : ""}
-        </p>
-        <h4 className="text-black text-left text-2xl font-medium font-sans">
-        ${price.toLocaleString('es-AR')}
-        </h4>
-        <p className="text-green-700 text-left text-xs font-normal mb-2 mt-2 font-sans">
-        {priceInfo}
-        </p>
-        <p className="text-green-700 text-left text-xs font-bold font-sans ">
-        {shippingInfo}
-        </p>
-        </a>
-        </>
+        <div className="max-w-[9.2rem] grid pb-5 ml-2 mr-2 border-b-1 border-neutral-300">
+            <a  href="#">
+                <img className="h-[9rem] w-fit p-2" src={img} alt={title} />
+                <h3 className="text-neutral-700 text-left text-medium mb-4 pr-2 pt-5 font-sans">
+                {title}
+                </h3>
+                <p className="text-neutral-500 text-left text-xs line-through font-sans">
+                {previousPrice !== undefined ? `$${previousPrice}` : ""}
+                </p>
+                <h4 className="text-black text-left text-2xl font-medium font-sans">
+                ${price.toLocaleString('es-AR')}
+                </h4>
+                <p className="text-green-700 text-left text-xs font-normal mb-2 mt-2 font-sans">
+                {priceInfo}
+                </p>
+                <p className="text-green-700 text-left text-xs font-bold font-sans ">
+                {shippingInfo}
+                </p>
+            </a>
+            <div className="pt-1 pb-1 pr-2 mt-3 mr-5 h-fit self-end flex justify-between gap-2">
+                <span className="text-gray-500 text-[0.6rem]">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                <button className="flex-1 text-sm font-medium bg-blue-100 hover:bg-blue-200 rounded-md text-cyan-700 cursor-pointer" onClick={onClickAdd}>+</button>
+                {onCar
+                ?<p className="flex-1 text-center">{onCar}</p>
+                :<></>}
+                {onCar
+                ? <button className="flex-1 text-sm font-medium bg-red-100 hover:bg-red-200 rounded-md text-red-700 cursor-pointer" onClick={onClickRemove}>-</button>
+                : <button className="flex-1 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 cursor-not-allowed pointer-events-nones" >-</button>}
+            </div>
+            
+        </div>
     );
 };
 
@@ -77,13 +94,13 @@ export function TitleSection(props: TitleSectionProps) {
     );
 };
 
-// COMPONENT SECTION (Utilizando CHILDREN)
+// COMPONENT SECTION (Using CHILDREN)
 export function Section(props: SectionProps) {
     const { titleSection, children } = props
     return (
-        <div className="max-w-[71.25rem] bg-white mt-10.5 mb-10.5 p-4 rounded-lg shadow-gray-300 shadow-lg ">
+        <div className="max-w-[71.25rem] bg-white mb-21 p-4 rounded-lg shadow-gray-300 shadow-lg ">
             <>{titleSection}</>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-5 gap-2">
                 {children}
             </div>
         </div>
@@ -92,10 +109,17 @@ export function Section(props: SectionProps) {
 
 // COMPONENT SEARCH
 export function Search(props: SearchProps){
-    const { placeholder, imgSearch } = props
+    const { placeholder, imgSearch, onSearch, setOnSearch} = props
+
+    const searching = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOnSearch(e.target.value);
+    };
+
     return(
         <div className="h-[2.5rem] w-[36.75rem] flex items-center bg-white shadow-gray-400 shadow-sm">
             <input 
+                value={onSearch}
+                onChange={searching}
                 className="text-sm w-full text-gray-700 placeholder-gray-700 tracking-wide pl-4 outline-none " 
                 type="search" 
                 placeholder={ placeholder }
@@ -111,9 +135,9 @@ export function Search(props: SearchProps){
 export function ButtonCustom(props: ButtonCustomProps){
     const { textButton, className, hrefButton } = props
     return(
-        <a className={className} href={hrefButton}>
-            {textButton}
-        </a>
+        hrefButton
+        ? <a className={className} href={hrefButton}>{textButton}</a>
+        : <div className={className}>{textButton}</div>
     );
 };
 
