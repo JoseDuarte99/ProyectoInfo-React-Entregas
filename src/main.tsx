@@ -9,24 +9,31 @@ import NoNavbarLayout from './layout/NoNavbarLayout.tsx'
 import WithNavbarLayout from './layout/WithNavbarLayout.tsx'
 import NotFound404 from './pages/NotFound404.tsx';
 import ProductById from './pages/ProductById.tsx';
+import CheckoutShipping from './pages/CheckoutShipping.tsx';
+import CheckoutLayout from './layout/CheckoutLayout.tsx';
 
 createRoot(document.getElementById('App')!).render(
   <StrictMode>
     <AppProvider>
       <BrowserRouter>
         <Routes>
-          {/* Rutas con Navbar */}
+          {/* */}
           <Route element={<WithNavbarLayout />}>
             <Route path='/' element={<App />} />
             <Route path='/carrito' element={<Cart />} />
             <Route path='/producto/:id' element={<ProductById />} />
-            <Route path='/checkout' element={<div />} />
           </Route>
 
-          {/* Ruta 404 sin Navbar */}
+          {/* */}
           <Route element={<NoNavbarLayout />}>
+
+            <Route path="/checkout" element={<CheckoutLayout />}>
+              <Route index element={<CheckoutShipping />} />
+            </Route>
+
             <Route path='*' element={<NotFound404 />} />
           </Route>
+
         </Routes>
       </BrowserRouter>
     </AppProvider>

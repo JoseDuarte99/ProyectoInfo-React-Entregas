@@ -1,10 +1,10 @@
 import { Outlet } from "react-router";
 
 
-const NoNavbarLayout = () => (
+const CheckoutLayout = () => (
   <>
     <Outlet />
   </>
 );
 
-export default NoNavbarLayout;
+export default CheckoutLayout;

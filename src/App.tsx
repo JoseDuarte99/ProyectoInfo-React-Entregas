@@ -1,7 +1,5 @@
 
 import { Main } from "./pages/Article";
-// import { Navbar } from "./components/Navbar";
-
 
 function App() {
 

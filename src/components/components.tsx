@@ -1,4 +1,3 @@
-
 import type { ProductCardProps, TitleSectionProps, SectionProps, ButtonCustomProps, SearchProps} from "../typing/Typing";
 
 
@@ -7,29 +6,30 @@ import type { ProductCardProps, TitleSectionProps, SectionProps, ButtonCustomPro
 
 // COMPONENT PRODUCT-CARD
 export function ProductCard(props: ProductCardProps) {
-    const { img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, units} = props
+    const {img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, units } = props
 
 
     return (
+        
         <div className="max-w-[9.2rem] grid pb-5 ml-2 mr-2 border-b-1 border-neutral-300">
-            <a  href="#">
-                <img className="h-[9rem] w-fit p-2" src={img} alt={title} />
-                <h3 className="text-neutral-700 text-left text-medium mb-4 pr-2 pt-5 font-sans">
-                {title}
-                </h3>
-                <p className="text-neutral-500 text-left text-xs line-through font-sans">
-                {previousPrice !== undefined ? `$${previousPrice}` : ""}
-                </p>
-                <h4 className="text-black text-left text-2xl font-medium font-sans">
-                ${price.toLocaleString('es-AR')}
-                </h4>
-                <p className="text-green-700 text-left text-xs font-normal mb-2 mt-2 font-sans">
-                {priceInfo}
-                </p>
-                <p className="text-green-700 text-left text-xs font-bold font-sans ">
-                {shippingInfo}
-                </p>
-            </a>
+                <a  href="#">
+                    <img className="h-[9rem] w-fit p-2" src={img} alt={title} />
+                    <h3 className="text-neutral-700 text-left text-medium mb-4 pr-2 pt-5 font-sans">
+                    {title}
+                    </h3>
+                    <p className="text-neutral-500 text-left text-xs line-through font-sans">
+                    {previousPrice !== undefined ? `$${previousPrice}` : ""}
+                    </p>
+                    <h4 className="text-black text-left text-2xl font-medium font-sans">
+                    ${price.toLocaleString('es-AR')}
+                    </h4>
+                    <p className="text-green-700 text-left text-xs font-normal mb-2 mt-2 font-sans">
+                    {priceInfo}
+                    </p>
+                    <p className="text-green-700 text-left text-xs font-bold font-sans ">
+                    {shippingInfo}
+                    </p>
+                </a>
             <div className="pt-1 pb-1 pr-2 mt-3 mr-5 h-fit self-end flex justify-between gap-2">
                 <span className="text-gray-500 text-[0.6rem]">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
                 <button className="flex-1 text-sm font-medium bg-blue-100 hover:bg-blue-200 rounded-md text-cyan-700 cursor-pointer" onClick={onClickAdd}>+</button>

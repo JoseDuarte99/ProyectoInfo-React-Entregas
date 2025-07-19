@@ -3,6 +3,7 @@ import { useContext } from "react";
 import CartContext from "../contexts/CartContext";
 
 import type {ProductBase} from "../typing/Typing";
+import { Link } from "react-router";
 
 
 type CarProductProps = {
@@ -52,9 +53,12 @@ function Cart () {
                             <p className="font-semibold">Total</p>
                             <p className="font-semibold">$ 0</p>
                         </div>
-                        <button className="bg-blue-500 text-white font-semibold mt-[1rem] ml-[1.5rem] mr-[1.5rem] w-[16.3rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-blue-700">
-                            Continuar compra
-                        </button>
+
+                        <Link to="/checkout" >
+                            <button className="bg-blue-500 text-white font-semibold mt-[1rem] ml-[1.5rem] mr-[1.5rem] w-[16.3rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-blue-700">
+                                Continuar compra
+                            </button>
+                        </Link>
                 </section>
             </div>
         </main>
