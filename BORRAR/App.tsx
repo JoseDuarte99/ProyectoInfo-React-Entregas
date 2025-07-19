@@ -1,5 +1,5 @@
 
-import { Main } from "./pages/Article";
+import { Main } from "./components/Article";
 // import { Navbar } from "./components/Navbar";
 
 
