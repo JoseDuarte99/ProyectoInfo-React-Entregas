@@ -1,50 +1,14 @@
-// TIPING THE PRODUCT-CARD
-export type ProductCardProps = {
-    key: number;
-    category: string;
-    img: string;
-    title: string;
-    previousPrice?: number;
-    price: number;
-    priceInfo?: string;
-    shippingInfo?: string;
-    onClickAdd?: () => void;
-    onClickRemove?: () => void;
-    onCar?: number;
-};
 
-// TIPING THE TITLE-SECTION
-type TitleSectionProps = {
-    title: string;
-    link?: string;
-};
+import type { ProductCardProps, TitleSectionProps, SectionProps, ButtonCustomProps, SearchProps} from "./typing/Typing";
 
-// TIPING THE SECTION
-type SectionProps = {
-    titleSection: React.ReactNode;
-    children: React.ReactNode;
-};
 
-// TIPING THE SEARCH
-type SearchProps = {
-    placeholder?: string;
-    imgSearch?: string;
-    onSearch: string;
-    setOnSearch: React.Dispatch<React.SetStateAction<string>>;
-};
-
-// TIPING THE BUTTON-CUSTOM
-type ButtonCustomProps = {
-    textButton?: string;
-    className?: string;
-    hrefButton?: string;
-};
 
 // ------------------------------------------------------ COMPONENTS
 
 // COMPONENT PRODUCT-CARD
 export function ProductCard(props: ProductCardProps) {
-    const { img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, onCar} = props
+    const { img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, units} = props
+
 
     return (
         <div className="max-w-[9.2rem] grid pb-5 ml-2 mr-2 border-b-1 border-neutral-300">
@@ -69,10 +33,10 @@ export function ProductCard(props: ProductCardProps) {
             <div className="pt-1 pb-1 pr-2 mt-3 mr-5 h-fit self-end flex justify-between gap-2">
                 <span className="text-gray-500 text-[0.6rem]">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
                 <button className="flex-1 text-sm font-medium bg-blue-100 hover:bg-blue-200 rounded-md text-cyan-700 cursor-pointer" onClick={onClickAdd}>+</button>
-                {onCar
-                ?<p className="flex-1 text-center">{onCar}</p>
+                {units
+                ?<p className="flex-1 text-center">{units}</p>
                 :<></>}
-                {onCar
+                {units
                 ? <button className="flex-1 text-sm font-medium bg-red-100 hover:bg-red-200 rounded-md text-red-700 cursor-pointer" onClick={onClickRemove}>-</button>
                 : <button className="flex-1 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 cursor-not-allowed pointer-events-nones" >-</button>}
             </div>

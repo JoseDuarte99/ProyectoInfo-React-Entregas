@@ -1,9 +1,12 @@
+
+
 type CartIconProps = {
   quantity: number;
 };
 
 export function CartIcon({ quantity }: CartIconProps) {
   return (
+
       <svg width="47" height="42" viewBox="25 2 70 25" xmlns="http://www.w3.org/2000/svg">
         {/* <!-- Carrito principal --> */}
         <path d="M0 0 C21.12 0 42.24 0 64 0 C64 18.48 64 36.96 64 56 C42.88 56 21.76 56 0 56 C0 37.52 0 19.04 0 0 Z" fill="none"/>
@@ -20,7 +23,6 @@ export function CartIcon({ quantity }: CartIconProps) {
           { quantity }
         </text>
       </svg>
-
   );
 };
 
