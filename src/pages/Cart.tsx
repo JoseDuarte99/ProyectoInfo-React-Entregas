@@ -20,10 +20,13 @@ function Cart () {
     }
 
 
-    const products = [...new Set(productCart.contextState)];
+    const productsByType = [...new Set(productCart.contextState)];
+    const productsAll = productCart.contextState;
 
+    const totalPrice = productsAll
+    ? productsAll.reduce((acc, p) => acc + (p.price ?? 0), 0)
+    : 0;
 
-    console.log(products)
     // RETURN -------------------------------------------------------------
     return (
         <main id="main">
@@ -33,30 +36,43 @@ function Cart () {
 
                     {/* DIV ALL PRODUCT */}
                     <div className="flex mb-[1rem] w-full bg-white rounded-md">
-                        <input type="checkbox" className="ml-[1.5rem]"/>
-                        <h1 className="mt-[1.25rem] mb-[1.25rem] ml-[1rem] mr-[1.5rem]">Todos los productos</h1>
+                        <h1 className="mt-[1.25rem] mb-[1.25rem] ml-[2rem] mr-[1.5rem]">Todos los productos</h1>
                     </div>
 
                     {/* DIV PRODUCT */}
                     <div>
-                        {products.map(p => 
-                            <CarProduct key={p.key} product={p}/>
+                        {productsByType.map(p => 
+                            <CarProduct product={p}/>
                         )}
                     </div>
 
                 </section>
 
                 {/* SECTION END PRICE */}
-                <section  className="col-span-1 pt-[1.5rem] pb-[1.5rem] bg-white rounded-md w-fit h-fit">
-                        <h2 className=" font-semibold mb-[1rem] pl-[1.5rem] pr-[1.5rem] ">Resumen de compra</h2>
-                        <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] pt-[1rem] mb-2 border-t-1 border-neutral-200">
-                            <p className="font-semibold">Total</p>
-                            <p className="font-semibold">$ 0</p>
+                <section  className="col-span-1 pt-[1.5rem] pb-[1.5rem] bg-white rounded-md w-[22.5rem] h-fit">
+                        <h2 className=" font-semibold mb-[1rem] pl-[1.5rem] pr-[1.5rem]">Resumen de compra</h2>
+                        <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] pt-5 border-t-1 border-neutral-200">
+                            <p className="text-neutral-700 text-sm">Producto</p>
+                            <p className="text-neutral-700 text-sm">$ {totalPrice !== 0? totalPrice.toLocaleString('es-AR') : 0}</p>
+                        </div>
+                        <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] mb-2 mt-2">
+                            <p className="text-neutral-700 text-sm">Envío</p>
+                            <p className="text-neutral-700 text-sm">$ 0</p>
                         </div>
 
-                        <Link to="/checkout" >
-                            <button className="bg-blue-500 text-white font-semibold mt-[1rem] ml-[1.5rem] mr-[1.5rem] w-[16.3rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-blue-700">
+                        <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] pt-[1rem] mb-2 ">
+                            <p className="font-semibold">Total</p>
+                            <p className="font-semibold">$ {totalPrice !== 0? totalPrice.toLocaleString('es-AR') : 0}</p>
+                        </div>
+
+                        <Link to="/checkout" className="flex justify-center pr-[1.5rem] pl-[1.5rem]">
+                            <button className="bg-blue-500 text-white font-semibold mt-[1rem] w-full h-[2.8rem] rounded-md cursor-pointer hover:bg-blue-700">
                                 Continuar compra
+                            </button>
+                        </Link>
+                        <Link to="/" className="flex justify-center pr-[1.5rem] pl-[1.5rem] mt-2">
+                            <button className="bg-neutral-200 text-neutral-700 font-semibold w-full h-[2.8rem] rounded-md cursor-pointer hover:bg-neutral-300">
+                                    Volver
                             </button>
                         </Link>
                 </section>
@@ -75,21 +91,19 @@ const CarProduct = (product :CarProductProps) => {
     }
 
     const p = product.product
-
+    const unitsProductInCart = productCart.contextState.filter(f => f.idProduct === p.idProduct).length;
 
     return (
     <div  className="mb-[1rem] bg-white rounded-md">
 
         {/* CATEGORY PRODUCT */}
         <div className="flex pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem] border-b-1 border-neutral-200">
-            <input type="checkbox" className="mr-[1.2rem]"/>
             <h3 className="font-medium text-xl">{p.category}</h3>
         </div>
 
             {/* DISPLAY PRODUCT */}
-            <section className="grid grid-cols-[1fr_2fr_7fr_2fr_4fr] gap-4 pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem]">
+            <section className="grid grid-cols-[2fr_7fr_2fr_4fr] gap-4 pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem]">
 
-                <input type="checkbox" className=" h-4"/>
                 <img src={p.img} alt={p.title} className="w-20 h-20 object-contain rounded"/>
                 <div>
                     <h3 className="text-sm font-semibold text-gray-800">{p.title}</h3>
@@ -102,15 +116,18 @@ const CarProduct = (product :CarProductProps) => {
                 </div>
 
                 <div className=" flex justify-center-safe items-center w-[7rem] h-[2.5rem] border-1 rounded-md">
-                    {productCart.contextState[0].units 
+                    {unitsProductInCart
                         ? <button className="flex-1 text-xl font-light hover:bg-blue-100 rounded-md text-cyan-700 cursor-pointer h-[2rem] mr-1 ml-1" onClick={() =>productCart.removeProductCart([p])}>-</button>
                         : <button className="flex-1 text-xl font-light hover:bg-neutral-100 rounded-md text-neutral-700 cursor-not-allowed h-[2rem] mr-1 ml-1">-</button>}
-                    {productCart.contextState[0].units
-                        ?<p className="text-sm mr-1 ml-1">{productCart.contextState[0].units}</p>
+                    {unitsProductInCart
+                        ?<p className="text-sm mr-1 ml-1">{unitsProductInCart}</p>
                         :<>{0}</>}
                     <button className="flex-1 text-xl font-light hover:bg-blue-100 rounded-md text-cyan-700 cursor-pointer h-[2rem] mr-1 ml-1" onClick={() =>productCart.addProductCart([p])}>+</button>
                 </div>
-                <div className="text-2xl text-gray-800 justify-self-end">${p.price.toLocaleString('es-AR')}</div>
+                <div className="justify-self-end">
+                    <h4 className="text-2xl text-gray-800">${p.price.toLocaleString('es-AR')}</h4>
+                    <p className="text-[0.6rem] text-neutral-500 font-bold">Precio por unidad</p>
+                </div>
 
             </section> 
         </div>

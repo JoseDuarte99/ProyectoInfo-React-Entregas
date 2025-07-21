@@ -6,7 +6,6 @@ import CartContext from "../contexts/CartContext";
 import FilterContext from "../contexts/FilterContext";
 import { FilterType } from "../typing/Typing";
 import StatusFilterContext from "../contexts/StatusFilterContext";
-import { Link } from "react-router";
 
 
 
@@ -89,7 +88,6 @@ export function Main() {
             keyMin: 8,
             keyMax: 15,
         }];
-        
         
         
     return (
@@ -188,9 +186,9 @@ export function Main() {
                                 : promotionFilter ? `Productos con ${promotionFilter}` : "Todos los productos"}/>}>
                         {productsForDisplay.map(product => {
                             return (
-                                <Link to={`/producto/${product.key}`}>
+
                                     <ProductCard 
-                                    key={product.key}
+                                    idProduct={product.idProduct}
                                     category={product.category}
                                     img={product.img}
                                     title={product.title}
@@ -200,22 +198,21 @@ export function Main() {
                                     shippingInfo={product.shippingInfo}
                                     onClickAdd={() => productCart.addProductCart([product])}
                                     onClickRemove={() => productCart.removeProductCart([product])}
-                                    units={product.units}
-                                    // units={productCart.contextState[0]?.units}
+                                    units={productCart.contextState.filter(p => p.idProduct === product.idProduct).length}
                                     />
-                                </Link>
+
                             );
                         })}
                         </Section>
                     : <>
                     {sections.map(({ title, link, keyMin, keyMax }) => (
-                        <Section key={title} titleSection={<TitleSection title={title} link={link} />}>
+                        <Section titleSection={<TitleSection title={title} link={link} />}>
                         {productsForDisplay
-                            .filter(product => product.key >= keyMin && product.key <= keyMax)
+                            .filter(product => product.idProduct >= keyMin && product.idProduct <= keyMax)
                             .map(product => (
-                                <Link to={`/producto/${product.key}`}>
+
                                     <ProductCard
-                                    key={product.key}
+                                    idProduct={product.idProduct}
                                     category={product.category}
                                     img={product.img}
                                     title={product.title}
@@ -225,9 +222,9 @@ export function Main() {
                                     shippingInfo={product.shippingInfo}
                                     onClickAdd={() => productCart.addProductCart([product])}
                                     onClickRemove={() => productCart.removeProductCart([product])}
-                                    units= {product.units}
+                                    units={productCart.contextState.filter(p => p.idProduct === product.idProduct).length}
                                     />
-                                </Link>
+
                             ))}
                             </Section>
                         ))}

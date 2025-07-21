@@ -1,9 +1,25 @@
 import { Link } from "react-router"
 import imgIcon from "../assets/LogoMeLi.svg";
 import { ButtonCustom } from "../components/components";
+import { useContext } from "react";
+import CartContext from "../contexts/CartContext";
 
 
 function CheckoutShipping(){
+
+    // CONTEXT-CART -------------------------------------------------------------
+    const productCart = useContext(CartContext);
+    if (!productCart){
+        throw new Error('useCart must be used within a CartProvider');
+    }
+
+
+    // const productsByType = [...new Set(productCart.contextState)];
+    const productsAll = productCart.contextState;
+
+    const totalPrice = productsAll
+    ? productsAll.reduce((acc, p) => acc + (p.price ?? 0), 0)
+    : 0;
 
 
     return (
@@ -35,7 +51,7 @@ function CheckoutShipping(){
                                                 </div>
                                         </div>
                                         <div className="flex justify-end">
-                                            <h3 className="font-semibold text-2xl">$ 10000</h3>
+                                            <h3 className="font-semibold text-2xl">$ 12000</h3>
                                         </div>
                                     </section> 
                                     <div className="flex pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem] border-t-1 border-neutral-200">
@@ -76,11 +92,19 @@ function CheckoutShipping(){
                                         </div>
                                     </section> 
                                 </div>
-                                <Link to="" className="flex justify-end">
-                                    <button className="bg-blue-500 text-white font-semibold w-[7rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-blue-700">
-                                            Continuar
-                                    </button>
-                                </Link>
+                                <div className="flex justify-end">
+                                    <Link to="/carrito">
+                                        <button className="bg-neutral-200 text-neutral-700 font-semibold w-[7rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-neutral-300 mr-2">
+                                                Volver
+                                        </button>
+                                    </Link>
+                                    <Link to="" className="">
+                                        <button className="bg-blue-500 text-white font-semibold w-[7rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-blue-700">
+                                                Continuar
+                                        </button>
+                                    </Link>
+
+                                </div>
             
                             </section>
 
@@ -90,15 +114,19 @@ function CheckoutShipping(){
                                     <h2 className="font-semibold mb-[1rem] pl-[1.5rem] pr-[1.5rem] ">Resumen de compra</h2>
                                     <div className=" pl-[1.5rem] pt-[1rem] pb-[1rem] mb-2 border-t-1 border-b-1 border-neutral-200">
                                         <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between text-neutral-700">
-                                            <p className="">Total</p>
-                                            <p className="">$ 0</p>
+                                            <p className="">Producto</p>
+                                            <p className="">$ {totalPrice !== 0? totalPrice.toLocaleString('es-AR') : 0}</p>
                                         </div>
                                         <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between text-neutral-700">
-                                            <p className="">Total</p>
+                                            <p className="">Envío</p>
                                             <p className="">$ 0</p>
                                         </div>
                                     </div>
-                                    <h2 className="text-lg font-semibold mt-[0.5rem] pl-[1.5rem] pr-[1.5rem] ">Total</h2>
+                                    <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] pt-[1rem] mb-2 ">
+                                        <p className="font-semibold">Total</p>
+                                        <p className="font-semibold">$ {totalPrice !== 0? totalPrice.toLocaleString('es-AR') : 0}</p>
+                                    </div>
+                                    
                             </section>
                         </div>
 

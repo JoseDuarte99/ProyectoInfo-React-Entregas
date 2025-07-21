@@ -50,6 +50,8 @@ export function Navbar() {
     const resultSearch = onSearch
     ? products.filter(product => normalizeString(product.title).includes(normalizeString(onSearch)))
     : undefined;
+
+    const quantityProductCart = new Set(productCart.contextState.map(p => p.idProduct));
     
     return(
         <header id="header" className="bg-yellow-300 flex justify-center w-screen">
@@ -61,7 +63,7 @@ export function Navbar() {
             ? <div className="absolute pt-2 pb-2 z-[9999] h-fit w-[36.75rem] grid items-center bg-white shadow-gray-400 shadow-sm">
             {resultSearch.map(product => {
                 return (                
-                    <div key={product.key} className="flex cursor-pointer hover:bg-blue-500 hover:text-white h-[2.2rem]">
+                    <div key={product.idProduct} className="flex cursor-pointer hover:bg-blue-500 hover:text-white h-[2.2rem]">
                     <img className="h-[1.5rem] mt-2 mb-2 pl-3 pr-3 border-l-1 border-l-gray-300" src={imgSearch} alt="Lupa" />
                     <p className="text-sm mt-2 mb-2 pr-4 pb-1 justify-items-center">{product.title}</p>
                     </div>
@@ -116,7 +118,7 @@ export function Navbar() {
                             // onClick={productCart.resetCart}
                             className="cursor-pointer relative" >
                             <Link to="carrito">
-                                <CartIcon quantity={productCart.contextState.length} />
+                                <CartIcon quantity={quantityProductCart.size} />
                             </Link>
                         </li>
                     </ul>

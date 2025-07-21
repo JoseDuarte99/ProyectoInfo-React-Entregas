@@ -1,12 +1,12 @@
 
 
 export type ProductBase = {
-  key: number;
+  idProduct: number;
   category: string;
   img: string;
   title: string;
   price: number;
-  units: number;
+  units?: number;
 };
 
 export type ProductOnCartProps = ProductBase;
@@ -75,42 +75,3 @@ export type FilterStateProps = [
 ];
 
 export type actionFilterProps = { type: FilterType; payload: string}
-
-
-// // TIPING THE FILTER BY CATEGORY
-// export type categoryFilterName = {
-//   type: FilterType.Category;
-//   name: string;
-// };
-
-// // TIPING THE FILTER BY PRICEMAX
-// export type PriceMaxFilter = {
-//   type: FilterType.PriceMax;
-//   max: number;
-// };
-
-// // TIPING THE FILTER BY PRICEMIN
-// export type PriceMinFilter = {
-//   type: FilterType.PriceMin;
-//   min: number;
-// };
-
-// // TIPING THE FILTER BY PRICEMIN
-// export type PromotionFilter = {
-//   type: FilterType.Promotion;
-//   id: string;
-// };
-
-
-
-
-
-// --------------------------------------------------------
-
-// // TIPING THE NAVBAR
-// export type NavbarProps = {
-// };
-
-// // TIPING THE MAIN
-// export type MainProps = {
-// };
