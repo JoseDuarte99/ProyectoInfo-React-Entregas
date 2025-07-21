@@ -1,6 +1,6 @@
-# 🌐 **Entrega-2 - Informatorio 2025**  
+# 🌐 **Entrega-3 - Informatorio 2025**  
 
-Este repositorio contiene lo solicitado para la **Entrega-2** en la especialidad de **React** del Informatorio 2025.  
+Este repositorio contiene lo solicitado para la **Entrega-3** en la especialidad de **React** del Informatorio 2025.  
 
 ## 📝 **Descripción**  
 Para el proyecto se utilizó **Vite + React + TypeScript**, simulando parte del sitio de **Mercado Libre Argentina**.  
@@ -21,7 +21,18 @@ Para el proyecto se utilizó **Vite + React + TypeScript**, simulando parte del 
 ✔ Carrito en el header. Ícono con **contador visible** del total de productos.
 
 ---
+### 📌 **Características Etapa 3**  
 
+ 🛒 Ecommerce (Mercado Libre)
+ ✅
+ Rutas obligatorias:
+   /  Lista de productos
+   /producto/:id  Detalle de producto
+   /carrito  Carrito de compras
+   /checkout  Simulación de compra
+   Agregar page de 404
+
+---
 ## 🛠️ **Requerimientos Técnicos**  
 
 | 💻 Tecnología | ⚙️ Requerimiento |
@@ -43,27 +54,7 @@ Aquí puedes ver la interfaz final inspirada en Mercado Libre Argentina:
 
 ## 🏗️ **Estructura del Proyecto**  
 ```bash
-/ProyectoInfo-React-Entrega1
-│── public
-│── src
-│   ├── assets
-│   ├── App.tsx
-│   ├── components.tsx
-│   ├── imageSvg.tsx
-│   ├── main.tsx
-│   ├── products.tsx
-│   ├── styles.css
-│   ├── vite-env.d.ts
-│── .gitignore
-├── eslint.config.js
-│── index.html
-│── package-lock.json
-│── package.json
-│── README.md
-│── tsconfig.app.json
-│── tsconfig.json
-│── tsconfig.node.json
-│── vite.config.ts
+
 ```
 
 ##  📦 **Instalación y Uso
