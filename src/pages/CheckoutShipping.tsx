@@ -1,7 +1,7 @@
 import { Link } from "react-router"
 import imgIcon from "../assets/LogoMeLi.svg";
 import { ButtonCustom } from "../components/components";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import CartContext from "../contexts/CartContext";
 
 
@@ -13,14 +13,20 @@ function CheckoutShipping(){
         throw new Error('useCart must be used within a CartProvider');
     }
 
+    const [shippingEnd, setShippingEnd ]= useState(0);
 
-    // const productsByType = [...new Set(productCart.contextState)];
+    const productsByType = [...new Set(productCart.contextState)];
     const productsAll = productCart.contextState;
 
-    const totalPrice = productsAll
-    ? productsAll.reduce((acc, p) => acc + (p.price ?? 0), 0)
-    : 0;
+    const totalPriceProduct = productsAll
+        ? productsAll.reduce((acc, p) => acc + (p.price ?? 0), 0)
+        : 0;
 
+    const totalPriceShipping = productsByType
+        ? productsByType.reduce((acc, p) => acc + (p.shippingPrice ?? 0), 0)
+        : 0;
+    
+    const totalPrice = totalPriceProduct + shippingEnd;
 
     return (
         <>
@@ -43,7 +49,11 @@ function CheckoutShipping(){
                                 <div className="mb-[1rem] bg-white rounded-md">
                                     <section className="flex justify-between pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem]">
                                         <div className="flex">
-                                            <input type="checkbox" />
+                                            <input 
+                                                type="checkbox"
+                                                checked={shippingEnd === totalPriceShipping}
+                                                onChange={() => setShippingEnd(totalPriceShipping)}
+                                                />
                                                 <div className="pl-5 ">
                                                     <h3 className="font-semibold text-xl pb-2">Enviar a domicilio</h3>
                                                     <p className="pb-2 text-neutral-700">Domicilio</p>
@@ -51,7 +61,7 @@ function CheckoutShipping(){
                                                 </div>
                                         </div>
                                         <div className="flex justify-end">
-                                            <h3 className="font-semibold text-2xl">$ 12000</h3>
+                                            <h3 className="font-semibold text-2xl">$ {totalPriceShipping !== 0? totalPriceShipping.toLocaleString('es-AR') : 0}</h3>
                                         </div>
                                     </section> 
                                     <div className="flex pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem] border-t-1 border-neutral-200">
@@ -62,7 +72,11 @@ function CheckoutShipping(){
                                 <div  className="mb-[1rem] bg-white rounded-md">
                                     <section className="flex justify-between pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem]">
                                         <div className="flex">
-                                            <input type="checkbox" />
+                                            <input 
+                                                type="checkbox"
+                                                checked={shippingEnd === (totalPriceShipping-(totalPriceShipping*20/100))}
+                                                onChange={() => setShippingEnd((totalPriceShipping-(totalPriceShipping*20/100)))}
+                                                />
                                                 <div className="pl-5 ">
                                                     <h3 className="font-semibold text-xl pb-2">Retiro en punto de entrega</h3>
                                                     <p className="pb-2 text-neutral-700">Domicilio</p>
@@ -70,7 +84,7 @@ function CheckoutShipping(){
                                                 </div>
                                         </div>
                                         <div className="flex justify-end">
-                                            <h3 className="font-semibold text-2xl">$ 10000</h3>
+                                            <h3 className="font-semibold text-2xl">$ {totalPriceShipping !== 0? (totalPriceShipping-(totalPriceShipping*20/100)).toLocaleString('es-AR') : 0}</h3>
                                         </div>
                                     </section> 
                                     <div className="flex pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem] border-t-1 border-neutral-200">
@@ -81,7 +95,11 @@ function CheckoutShipping(){
                                 <div  className="mb-[1rem] bg-white rounded-md">
                                     <section className="flex justify-between pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem]">
                                         <div className="flex">
-                                            <input type="checkbox" />
+                                            <input 
+                                                type="checkbox"
+                                                checked={shippingEnd === 0}
+                                                onChange={() => setShippingEnd(0)}
+                                                />
                                                 <div className="pl-5 ">
                                                     <h3 className="font-semibold text-xl pb-2">Retirar en el domicilio del vendedor</h3>
                                                     <p className="pb-2 text-neutral-700">Domicilio</p>
@@ -115,11 +133,11 @@ function CheckoutShipping(){
                                     <div className=" pl-[1.5rem] pt-[1rem] pb-[1rem] mb-2 border-t-1 border-b-1 border-neutral-200">
                                         <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between text-neutral-700">
                                             <p className="">Producto</p>
-                                            <p className="">$ {totalPrice !== 0? totalPrice.toLocaleString('es-AR') : 0}</p>
+                                            <p className="">$ {totalPriceProduct !== 0? totalPriceProduct.toLocaleString('es-AR') : 0}</p>
                                         </div>
                                         <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between text-neutral-700">
                                             <p className="">Envío</p>
-                                            <p className="">$ 0</p>
+                                            <p className="">$ {shippingEnd.toLocaleString('es-AR') }</p>
                                         </div>
                                     </div>
                                     <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] pt-[1rem] mb-2 ">

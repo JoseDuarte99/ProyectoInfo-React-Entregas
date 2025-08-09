@@ -10,7 +10,6 @@ import type { ProductCardProps, TitleSectionProps, SectionProps, ButtonCustomPro
 export function ProductCard(props: ProductCardProps) {
     const {idProduct, img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, units} = props
 
-    console.log(idProduct)
     return (
         <div className="max-w-[9.2rem] grid pb-5 ml-2 mr-2 border-b-1 border-neutral-300">
             <Link to={`/producto/${idProduct}`}>
@@ -101,7 +100,7 @@ export function ButtonCustom(props: ButtonCustomProps){
     const { textButton, className, hrefButton } = props
     return(
         hrefButton
-        ? <a className={className} href={hrefButton}>{textButton}</a>
+        ? <Link className={className} to={hrefButton}>{textButton}</Link>
         : <div className={className}>{textButton}</div>
     );
 };

@@ -13,7 +13,7 @@ import CartContext from "../contexts/CartContext";
 import SearchContext from "../contexts/SearchContext";
 import FilterContext from "../contexts/FilterContext";
 import StatusFilterContext from "../contexts/StatusFilterContext";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 
 // COMPONENT NAVBAR FOR MERCADO LIBRE
@@ -34,7 +34,7 @@ export function Navbar() {
     if (!filtersProduct){
         throw new Error('ERROR EN LOS FILTROS');
     }
-    const {addFilterProducts} = filtersProduct;
+    const {addFilterProducts, resetFilterProducts} = filtersProduct;
     
     const statusFiltersProduct = useContext(StatusFilterContext);
     if (!statusFiltersProduct){
@@ -53,10 +53,12 @@ export function Navbar() {
 
     const quantityProductCart = new Set(productCart.contextState.map(p => p.idProduct));
     
+    const navigate = useNavigate();
+
     return(
         <header id="header" className="bg-yellow-300 flex justify-center w-screen">
         <div className="grid grid-cols-[1fr_3fr_2fr] gap-5 gap-y-2 max-w-[1200px] max-h-[100px] pl-2.5 pr-2.5 pt-2 pb-3">
-        <Link to="/" className="flex justify-star w-[10.2rem]"><img  className="h-[2.5rem]" src={imgIcon} alt="Logo de Mercado Libre" /></Link>        
+        <Link to="/" onClick={() => {setFilteringState(false); resetFilterProducts(FilterType.Reset, "")}} className="flex justify-star w-[10.2rem]"><img  className="h-[2.5rem]" src={imgIcon} alt="Logo de Mercado Libre" /></Link>        
         <div className="relative" >
         <Search onSearch={onSearch} setOnSearch={setOnSearch} placeholder="Buscar products, marcas y más…" imgSearch= {imgSearch}/>
         {resultSearch 
@@ -91,23 +93,24 @@ export function Navbar() {
                 <ul>
                 {[...new Set(products.map(product => product.category))]
                     .map((categoria, index) => (
-                        <li className="cursor-pointer hover:bg-sky-500 pt-1 pb-1" onClick={() => {addFilterProducts(FilterType.Category, categoria); setFilteringState(true)}} key={index}>{categoria.charAt(0).toUpperCase() + categoria.slice(1)}
+                        <li
+                            className="cursor-pointer hover:bg-sky-500 pt-1 pb-1" onClick={() => {addFilterProducts(FilterType.Category, categoria); setFilteringState(true); navigate("/")}} key={index}>{categoria.charAt(0).toUpperCase() + categoria.slice(1)}
                         </li>
                     ))}
                     </ul>
                     </div>
                     </li>
-                    <li onClick={() => {addFilterProducts(FilterType.Promotion, "Oferta"); setFilteringState(true)}}><ButtonCustom hrefButton="#" textButton="Ofertas" className="text-sm"/></li>
-                    <li onClick={() => {addFilterProducts(FilterType.Promotion, "Cupón"); setFilteringState(true)}}><ButtonCustom hrefButton="#" textButton="Cupones" className="text-sm"/></li>
-                    <li onClick={() => {addFilterProducts(FilterType.Category, "Supermercado"); setFilteringState(true)}}><ButtonCustom hrefButton="#" textButton="Supermercado" className=" text-sm"/></li>
-                    <li onClick={() => {addFilterProducts(FilterType.Category, "Moda"); setFilteringState(true)}}><ButtonCustom hrefButton="#" textButton="Moda" className=" text-sm"/></li>
+                    <li onClick={() => {addFilterProducts(FilterType.Promotion, "Oferta"); setFilteringState(true)}}><ButtonCustom hrefButton="/" textButton="Ofertas" className="text-sm"/></li>
+                    <li onClick={() => {addFilterProducts(FilterType.Promotion, "Cupón"); setFilteringState(true)}}><ButtonCustom hrefButton="/" textButton="Cupones" className="text-sm"/></li>
+                    <li onClick={() => {addFilterProducts(FilterType.Category, "Supermercado"); setFilteringState(true)}}><ButtonCustom hrefButton="/" textButton="Supermercado" className=" text-sm"/></li>
+                    <li onClick={() => {addFilterProducts(FilterType.Category, "Moda"); setFilteringState(true)}}><ButtonCustom hrefButton="/" textButton="Moda" className=" text-sm"/></li>
                     <li onClick={() => {addFilterProducts(FilterType.Promotion, "Mercado Play"); setFilteringState(true)}} className="relative">
                     <a href="#">
                     <ButtonCustom textButton="Mercado Play" className=" text-sm"/>
                     <span className="absolute left-1/2 transform -translate-x-1/2 top-[-5px] text-[0.5rem] text-white font-mono font-bold bg-green-600 pl-1 pr-1 rounded-xl ">GRATIS</span>
                     </a>
                     </li>
-                    <li ><ButtonCustom hrefButton="#" textButton="Vender" className=" text-sm"/></li>
+                    <li ><ButtonCustom hrefButton="crearProducto" textButton="Vender" className=" text-sm"/></li>
                     <li><ButtonCustom hrefButton="#" textButton="Ayuda" className="text-sm"/></li>
                     </ul>
                     <ul className="flex gap-4.5 justify-end items-end">

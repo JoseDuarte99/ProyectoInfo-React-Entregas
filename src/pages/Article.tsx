@@ -1,11 +1,14 @@
-import { useContext, useState } from "react";
+
+import { useContext, useEffect, useState } from "react";
 import { ProductCard, Section, TitleSection } from "../components/components";
 import { CruzIcon } from "../imageSvg";
-import products from "../products";
 import CartContext from "../contexts/CartContext";
 import FilterContext from "../contexts/FilterContext";
-import { FilterType } from "../typing/Typing";
+import { FilterType, type ProductDB } from "../typing/Typing";
 import StatusFilterContext from "../contexts/StatusFilterContext";
+import { productService } from "../data/services";
+import LoadingProduct from "../components/loadingProduct";
+import ErrorLoadingProduct from "../components/errorLoadingProduct";
 
 
 
@@ -33,14 +36,50 @@ export function Main() {
     }
     const {filteringState, setFilteringState} = statusFiltersProduct;
     
-        // Product filtering
+    // Product filtering
     const categoryFilterName = valueFilter.find(f => f.type === FilterType.Category)?.name;
     const priceFilterMax = valueFilter.find(f => f.type === FilterType.PriceMax)?.max;
     const priceFilterMin = valueFilter.find(f => f.type === FilterType.PriceMin)?.min;
     const promotionFilter = valueFilter.find(f => f.type === FilterType.Promotion)?.id;
     
-    let productsForDisplay = products;
+
     
+    // -------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------- IMPLEMENTANDO SERVICIOS ----------------------------------------
+    
+    // const filters = {priceRange: {max: 0, min: 0}, colors: "", brands:[], rating:0 } 
+    // const options = {filters: filters, sortBy: "", category: "all", searchQuery: "", limit:0, offset:0};
+
+    const [loading, setLoading] = useState(false);
+    const [products, setProducts] = useState<ProductDB[]>([]);
+
+
+    const loadProduct = async () => {
+        try {
+            setLoading(true);
+            const data = await productService.getAllProducts()
+            setProducts(data)
+        } catch (error) {
+            console.error(`error`, error);
+            <ErrorLoadingProduct />
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() =>{
+
+        loadProduct();
+    }, []);
+
+    if (loading) {
+        return <LoadingProduct/>
+    }
+    
+    let productsForDisplay = products;
+
+    // --------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------
 
     // Filtered by category
     if (categoryFilterName) {
@@ -67,28 +106,33 @@ export function Main() {
     // Sections for Index
     const sections = [
         {
+            key: 1,
             title: "Lo más vendidos de la semana",
             link: "Ir a Más vendidos",
-            keyMin: 0,
-            keyMax: 7,
+            keyMin: 37,
+            keyMax: 39,
         },
         {
+            key: 2,
             title: "También puede interesarte",
-            keyMin: 40,
-            keyMax: 47,
+            keyMin: 16,
+            keyMax: 23,
         },
         {
+            key: 3,
             title: "Productos más buscados de la semana",
             link: "Ir a los más buscados",
-            keyMin: 23,
-            keyMax: 30,
+            keyMin: 24,
+            keyMax: 31,
         },
         {
+            key: 4,
             title: "Relacionado con lo último que viste",
             keyMin: 8,
             keyMax: 15,
         }];
         
+        // return (<></>)
         
     return (
 
@@ -104,7 +148,8 @@ export function Main() {
                 ? <button 
                     onClick={ () => removeFilterProducts(FilterType.Category, "")}
                     className="flex items-center justify-center text-sm text-neutral-500 bg-neutral-100 border-1 border-neutral-300 rounded-sm cursor-pointer w-fit pl-1 pr-1 ml-2 mb-5" > {categoryFilterName}{<CruzIcon className="h-4 w-4 text-neutral-400 ml-3 mt-0.5" />}</button>
-                : <ul className="items-center justify-center text-sm text-neutral-500 bg-neutral-100 border-1 border-neutral-300 rounded-sm cursor-pointer w-fit pl-1 pr-1 ml-2 mb-2" >{[...new Set(products.map(product => product.category))]
+                : <ul className="items-center justify-center text-sm text-neutral-500 bg-neutral-100 border-1 border-neutral-300 rounded-sm cursor-pointer w-fit pl-1 pr-1 ml-2 mb-2" >
+                    {[...new Set(products.map(product => product.category))]
                     .map((categoria, index) => (
                         <li className="hover:text-neutral-600 hover:text-lg" 
                         onClick={() => addFilterProducts(FilterType.Category, categoria)}
@@ -188,6 +233,7 @@ export function Main() {
                             return (
 
                                     <ProductCard 
+                                    key={product.idProduct}
                                     idProduct={product.idProduct}
                                     category={product.category}
                                     img={product.img}
@@ -205,13 +251,13 @@ export function Main() {
                         })}
                         </Section>
                     : <>
-                    {sections.map(({ title, link, keyMin, keyMax }) => (
-                        <Section titleSection={<TitleSection title={title} link={link} />}>
+                    {sections.map(({ title, link, keyMin, keyMax, key }) => (
+                        <Section key={key} titleSection={<TitleSection title={title} link={link} />}>
                         {productsForDisplay
                             .filter(product => product.idProduct >= keyMin && product.idProduct <= keyMax)
                             .map(product => (
-
                                     <ProductCard
+                                    key={product.idProduct}
                                     idProduct={product.idProduct}
                                     category={product.category}
                                     img={product.img}
@@ -224,14 +270,14 @@ export function Main() {
                                     onClickRemove={() => productCart.removeProductCart([product])}
                                     units={productCart.contextState.filter(p => p.idProduct === product.idProduct).length}
                                     />
-
                             ))}
                             </Section>
+                            
                         ))}
                         </>
                     }
                     </main> 
                     </div>
-                    )};
+                    );
                     
-                    
+                    }
