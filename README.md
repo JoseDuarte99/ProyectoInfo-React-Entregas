@@ -1,4 +1,4 @@
-# 🌐 **Entrega-3 - Informatorio 2025**  
+# 🌐 **Entrega-4 - Informatorio 2025**  
 
 Este repositorio contiene lo solicitado para la **Entrega-3** en la especialidad de **React** del Informatorio 2025.  
 
