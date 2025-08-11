@@ -33,6 +33,17 @@ Para el proyecto se utilizó **Vite + React + TypeScript**, simulando parte del 
    Agregar page de 404
 
 ---
+### 📌 **Características Etapa 4**  
+
+🛒 Ecommerce (Mercado Libre)
+ ✅ Obtener lista de productos desde servicio
+ ✅ Obtener detalle del producto (/producto/:id ) desde servicio
+ ✅ Agregar al carrito no necesita servicio (mantener el manejo de estado actual)
+ ✅ Mostrar estado de carga/error mientras se obtienen datos
+ ✅ Crear ruta nueva que permite crear productos usando hook
+
+ 
+---
 ## 🛠️ **Requerimientos Técnicos**  
 
 | 💻 Tecnología | ⚙️ Requerimiento |
