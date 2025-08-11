@@ -14,6 +14,7 @@ export type ProductDB = {
   priceInfo?: string;
   shippingInfo?: string;
   shippingPrice?: number;
+  by?: string;
 };
 
 export type ProductBase = {
@@ -27,6 +28,7 @@ export type ProductBase = {
   priceInfo?: string;
   shippingInfo?: string;
   shippingPrice?: number;
+  by?: string;
 };
 
 export type ProductOnCartProps = ProductBase;

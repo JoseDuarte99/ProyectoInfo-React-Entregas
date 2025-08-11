@@ -1,12 +1,13 @@
 import { Link, useNavigate, useParams } from "react-router";
 // import products from "../products";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import CartContext from "../contexts/CartContext";
-import type { ProductCardProps, ProductDB } from "../typing/Typing";
+import type { ProductCardProps } from "../typing/Typing";
 import { productService } from "../data/services";
-import ErrorLoadingProduct from "../components/errorLoadingProduct";
+// import ErrorLoadingProduct from "../components/errorLoadingProduct";
 import LoadingProduct from "../components/loadingProduct";
 import ProductNotFound from "../components/productNoFound";
+import { useQuery } from "@tanstack/react-query";
 
 
 
@@ -23,38 +24,66 @@ function ProductById (){
 
     const { id } = useParams<{ id: string }>();
     
-    
         // -------------------------------------------------------------------------------------------------------------
         // -------------------------------------------- IMPLEMENTANDO SERVICIOS ----------------------------------------
     
-        const [loadingProductById, setLoadingProductById] = useState(false);
-        const [product, setProduct] = useState<ProductDB>();
+        // const [loadingProductById, setLoadingProductById] = useState(false);
+        // const [product, setProduct] = useState<ProductDB>();
 
-        const loadProductById = async (idProductLoad :string) => {
-            try {
-                setLoadingProductById(true);
-                const data = await productService.getProductById((idProductLoad))
-                setProduct(data)
-            } catch (error) {
-                console.error(`error`, error);
-                <ErrorLoadingProduct/>
-            } finally {
-                setLoadingProductById(false)
-            }
-        }
+        // const loadProductById = async (idProductLoad :string) => {
+        //     try {
+        //         setLoadingProductById(true);
+        //         const data = await productService.getProductById((idProductLoad))
+        //         setProduct(data)
+        //     } catch (error) {
+        //         console.error(`error`, error);
+        //         <ErrorLoadingProduct/>
+        //     } finally {
+        //         setLoadingProductById(false)
+        //     }
+        // }
 
-        useEffect (() => {
-            loadProductById(id ? id : "");
-        }, [id]);
+        // useEffect (() => {
+        //     loadProductById(id ? id : "");
+        // }, [id]);
 
         
 
-        if (loadingProductById) return <LoadingProduct/>
-        if (!product) return <ProductNotFound/>
+        // if (loadingProductById) return <LoadingProduct/>
+        // if (!product) return <ProductNotFound/>
         
     
         // --------------------------------------------------------------------------------------------------------------------
         // --------------------------------------------------------------------------------------------------------------------
+
+        // -------------------------------------------------------------------------------------------------------------
+        // --------------------------------- IMPLEMENTANDO SERVICIOS CON REACT QUERY -----------------------------------
+        
+    
+
+        const { isPending, isError, data, error } = useQuery({
+            queryKey:["getProduct", id],
+            queryFn: () => productService.getProductById(id ? id : ""),
+            enabled: !!id,
+        })
+
+        if (isPending) {
+            return <LoadingProduct/>
+        }
+    
+        if (isError) {
+            console.error(error);
+            return <ProductNotFound/>
+        }
+    
+        const product = data;
+
+
+    
+        
+        // -------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
+        
 
     const addCart = (product: ProductCardProps) => {
     productCart.addProductCart([product]);
@@ -112,7 +141,7 @@ function ProductById (){
                                 </p>
                                 <p className="text-green-700 text-left text-xs font-normal mb-2 mt-2 font-sans ml-25">{product.priceInfo}</p>
                                 <p className="text-green-700 text-left text-xs font-bold font-sans ml-25">{product.shippingInfo}</p>
-
+                            
                                 <button 
                                     onClick={() => buyProduct(product)}
                                     className="bg-blue-500 text-white font-semibold mt-[1rem] ml-[1.5rem] mr-[1.5rem] w-[16.3rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-blue-700">

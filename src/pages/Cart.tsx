@@ -19,10 +19,8 @@ function Cart () {
         throw new Error('useCart must be used within a CartProvider');
     }
 
-
-
     const productsByType = [...new Set(productCart.contextState)];
-    console.log(productsByType)
+
     const productsAll = productCart.contextState;
 
     const totalPriceProduct = productsAll

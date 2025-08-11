@@ -1,14 +1,17 @@
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { ProductCard, Section, TitleSection } from "../components/components";
 import { CruzIcon } from "../imageSvg";
 import CartContext from "../contexts/CartContext";
 import FilterContext from "../contexts/FilterContext";
-import { FilterType, type ProductDB } from "../typing/Typing";
+import { FilterType } from "../typing/Typing";
 import StatusFilterContext from "../contexts/StatusFilterContext";
 import { productService } from "../data/services";
 import LoadingProduct from "../components/loadingProduct";
 import ErrorLoadingProduct from "../components/errorLoadingProduct";
+import { useQuery } from "@tanstack/react-query";
+
+import { categories } from "../data/db";
 
 
 
@@ -50,36 +53,65 @@ export function Main() {
     // const filters = {priceRange: {max: 0, min: 0}, colors: "", brands:[], rating:0 } 
     // const options = {filters: filters, sortBy: "", category: "all", searchQuery: "", limit:0, offset:0};
 
-    const [loading, setLoading] = useState(false);
-    const [products, setProducts] = useState<ProductDB[]>([]);
+    // const [loading, setLoading] = useState(false);
+    // const [products, setProducts] = useState<ProductDB[]>([]);
 
 
-    const loadProduct = async () => {
-        try {
-            setLoading(true);
-            const data = await productService.getAllProducts()
-            setProducts(data)
-        } catch (error) {
-            console.error(`error`, error);
-            <ErrorLoadingProduct />
-        } finally {
-            setLoading(false)
-        }
-    }
+    // const loadProduct = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const data = await productService.getAllProducts()
+    //         setProducts(data)
+    //     } catch (error) {
+    //         console.error(`error`, error);
+    //         <ErrorLoadingProduct />
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
 
-    useEffect(() =>{
+    // useEffect(() =>{
 
-        loadProduct();
-    }, []);
+    //     loadProduct();
+    // }, []);
 
-    if (loading) {
+    // if (loading) {
+    //     return <LoadingProduct/>
+    // }
+    
+    // let productsForDisplay = products;
+
+    // --------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------
+
+    
+    
+    // -------------------------------------------------------------------------------------------------------------
+    // --------------------------------- IMPLEMENTANDO SERVICIOS CON REACT QUERY -----------------------------------
+    
+
+    const { isPending, isError, data, error } = useQuery({
+        queryKey:["getProduct"],
+        queryFn: productService.getAllProducts,
+    })
+
+    if (isPending) {
         return <LoadingProduct/>
     }
-    
-    let productsForDisplay = products;
 
-    // --------------------------------------------------------------------------------------------------------------------
-    // --------------------------------------------------------------------------------------------------------------------
+    if (isError) {
+        console.error(error);
+        return <ErrorLoadingProduct/>
+    }
+
+    let productsForDisplay = data;
+
+
+    const myProducts = productsForDisplay.filter(p => p.by);
+    
+    // -------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------------
+    
 
     // Filtered by category
     if (categoryFilterName) {
@@ -109,8 +141,8 @@ export function Main() {
             key: 1,
             title: "Lo más vendidos de la semana",
             link: "Ir a Más vendidos",
-            keyMin: 37,
-            keyMax: 39,
+            keyMin: 1,
+            keyMax: 7,
         },
         {
             key: 2,
@@ -131,9 +163,7 @@ export function Main() {
             keyMin: 8,
             keyMax: 15,
         }];
-        
-        // return (<></>)
-        
+
     return (
 
         <div className="bg-gray-200 grid grid-cols-6 p-3 pt-10.5">
@@ -149,14 +179,14 @@ export function Main() {
                     onClick={ () => removeFilterProducts(FilterType.Category, "")}
                     className="flex items-center justify-center text-sm text-neutral-500 bg-neutral-100 border-1 border-neutral-300 rounded-sm cursor-pointer w-fit pl-1 pr-1 ml-2 mb-5" > {categoryFilterName}{<CruzIcon className="h-4 w-4 text-neutral-400 ml-3 mt-0.5" />}</button>
                 : <ul className="items-center justify-center text-sm text-neutral-500 bg-neutral-100 border-1 border-neutral-300 rounded-sm cursor-pointer w-fit pl-1 pr-1 ml-2 mb-2" >
-                    {[...new Set(products.map(product => product.category))]
-                    .map((categoria, index) => (
+                    {categories.map((x) => (
                         <li className="hover:text-neutral-600 hover:text-lg" 
-                        onClick={() => addFilterProducts(FilterType.Category, categoria)}
-                        key={index}>{categoria.charAt(0).toUpperCase() + categoria.slice(1)}
+                            onClick={() => addFilterProducts(FilterType.Category, x.name)}
+                            key={x.id}>{x.name.charAt(0).toUpperCase() + x.name.slice(1)}
                         </li>
-                    ))}
-                    </ul>
+                        ))
+                    }
+                </ul>
                 }
 
                 <p className="items-center justify-center text-sm font-bold text-neutral-500 w-fit mb-1 pl-1 pr-1 ml-2">Precio</p>
@@ -220,6 +250,30 @@ export function Main() {
                         ? <></>
                         : <button className=" justify-self-end text-sm text-neutral-600 font-sans cursor-pointer rounded-sm border bg-gray-200 border-neutral-700  hover:bg-neutral-300 hover:text-neutral-700 pl-3 pr-3 mb-1 " onClick={() => setFilteringState(true)}>Filtrar</button> 
                     }
+
+
+                {myProducts?.length > 0 
+                    &&<Section titleSection = {<TitleSection title="Tus productos" />}>
+                        {
+                        myProducts.map(product => (
+                            <ProductCard 
+                                key={product.idProduct}
+                                idProduct={product.idProduct}
+                                category={product.category}
+                                img={product.img}
+                                title={product.title}
+                                previousPrice={product.previousPrice}
+                                price={product.price}
+                                priceInfo={product.priceInfo}
+                                shippingInfo={product.shippingInfo}
+                                onClickAdd={() => productCart.addProductCart([product])}
+                                onClickRemove={() => productCart.removeProductCart([product])}
+                                units={productCart.contextState.filter(p => p.idProduct === product.idProduct).length}
+                                by={product.by}
+                            />
+                        ))}
+                        </Section>}
+
         {/* TERNARIO ---------------------------------------------------------------------------------------- */}
                 {filteringState || categoryFilterName || promotionFilter
                     ? <Section titleSection={<TitleSection title = {!productsForDisplay || productsForDisplay.length === 0 

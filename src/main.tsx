@@ -15,11 +15,16 @@ import CreateProduct from './pages/CreateProduct.tsx';
 import CreateProductLayout from './layout/CreateProductLayout.tsx';
 import CreateProductForm from './pages/CreatProductForm.tsx';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+
+const queryClient = new QueryClient()
 
 
 
 createRoot(document.getElementById('App')!).render(
   <StrictMode>
+    <QueryClientProvider client={queryClient}>
       <AppProvider>
         <BrowserRouter>
           <Routes>
@@ -46,5 +51,6 @@ createRoot(document.getElementById('App')!).render(
           </Routes>
         </BrowserRouter>
       </AppProvider>
+    </QueryClientProvider>
   </StrictMode>,
 );

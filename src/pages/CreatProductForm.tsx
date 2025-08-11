@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import type { ProductDB } from "../typing/Typing";
 import { ButtonCustom } from "../components/components";
 import imgIcon from "../assets/LogoMeLi.svg";
@@ -7,15 +7,11 @@ import imgIcon from "../assets/LogoMeLi.svg";
 
 
 export default function CreateProductForm() {
-
+    const navigate = useNavigate();
     const { category } = useParams<{ category: string }>();
 
-    const auxLocalStorage = localStorage.getItem("productLocal");
-    const productLocalStorage = auxLocalStorage ? [JSON.parse(auxLocalStorage)][0].length : 0;
-
-
     const [product, setProduct] = useState<ProductDB>({
-        idProduct: 38, 
+        idProduct: 37, 
         category: category ?? "",
         description: "",
         img: "",
@@ -26,7 +22,12 @@ export default function CreateProductForm() {
         price: 0,
         inStock: true,
         prime: false,
+        by: "",
     });
+
+    const capitalize = (text: string) =>
+        text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+
 
     const handleChange = ( e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
@@ -53,15 +54,24 @@ export default function CreateProductForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Producto creado:", product);
 
         const productLocal = localStorage.getItem("productLocal");
         const productStorage = productLocal ? JSON.parse(productLocal) : [];
-        productStorage.push(product);
+
+        const nextId = 37 + productStorage.length + 1;
+
+        const newProduct = {
+            ...product,
+            idProduct: nextId,
+            category: capitalize(category ?? ""),
+            by: "Tu producto"
+        };
+
+        productStorage.push(newProduct);
         localStorage.setItem("productLocal", JSON.stringify(productStorage));
 
-        setProduct(   
-            {idProduct: (38 + productLocalStorage) + 1, 
+        setProduct({
+            idProduct: nextId,
             category: category ?? "",
             description: "",
             img: "",
@@ -71,13 +81,18 @@ export default function CreateProductForm() {
             title: "",
             price: 0,
             inStock: true,
-            prime: false,})
-        // Aquí podrías enviar a una API o guardar en estado global
+            prime: false,
+            by: "",
+        });
+
+        navigate(`/`);
     };
-        
+
 
     const styleInput = "h-[2.5rem] w-full flex items-center bg-white shadow-gray-500 shadow-md rounded-sm pl-2"
     const styleTitle = "text-neutral-600 font-medium"
+
+
 
     return (
     <>
@@ -112,7 +127,7 @@ export default function CreateProductForm() {
                         className={`${styleInput} cursor-not-allowed`}
                         type="text"
                         name="category"
-                        value={`${category?.charAt(0).toUpperCase()}${category?.substring(1)}`}
+                        value={capitalize(category ?? "")}
                         required
                         disabled
                     />
@@ -137,7 +152,7 @@ export default function CreateProductForm() {
                         name="img"
                         value={product.img}
                         onChange={handleChange}
-                        
+                        required
                     />
                 </label>
 

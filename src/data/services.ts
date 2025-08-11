@@ -13,7 +13,7 @@ export const productService = {
   // async getAllProducts(options?: Options) {
   async getAllProducts() {
     await delay(200);
-    let products = [...productsDB];
+    const products = [...productsDB];
 
     // Apply filters and sorting
     // if (options) { products = this.applyFiltersAndSort(products, options); }
