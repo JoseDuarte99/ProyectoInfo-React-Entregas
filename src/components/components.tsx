@@ -8,9 +8,8 @@ import type { ProductCardProps, TitleSectionProps, SectionProps, ButtonCustomPro
 
 // COMPONENT PRODUCT-CARD
 export function ProductCard(props: ProductCardProps) {
-    const {idProduct, img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, units} = props
+    const {idProduct, img, category, title, previousPrice, price, priceInfo, shippingInfo, onClickAdd, onClickRemove, units, by} = props
 
-    console.log(idProduct)
     return (
         <div className="max-w-[9.2rem] grid pb-5 ml-2 mr-2 border-b-1 border-neutral-300">
             <Link to={`/producto/${idProduct}`}>
@@ -41,7 +40,7 @@ export function ProductCard(props: ProductCardProps) {
                 ? <button className="flex-1 text-sm font-medium bg-red-100 hover:bg-red-200 rounded-md text-red-700 cursor-pointer" onClick={onClickRemove}>-</button>
                 : <button className="flex-1 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 cursor-not-allowed pointer-events-nones" >-</button>}
             </div>
-            
+            {by ? <p className="text-blue-700 text-left text-xs font-semibold font-sans mt-5 flex justify-center">{by}</p> : <></>}
         </div>
     );
 };
@@ -101,7 +100,7 @@ export function ButtonCustom(props: ButtonCustomProps){
     const { textButton, className, hrefButton } = props
     return(
         hrefButton
-        ? <a className={className} href={hrefButton}>{textButton}</a>
+        ? <Link className={className} to={hrefButton}>{textButton}</Link>
         : <div className={className}>{textButton}</div>
     );
 };

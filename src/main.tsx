@@ -11,34 +11,46 @@ import ProductById from './pages/ProductById.tsx';
 import CheckoutShipping from './pages/CheckoutShipping.tsx';
 import CheckoutLayout from './layout/CheckoutLayout.tsx';
 import { Main } from './pages/Article.tsx';
+import CreateProduct from './pages/CreateProduct.tsx';
+import CreateProductLayout from './layout/CreateProductLayout.tsx';
+import CreateProductForm from './pages/CreatProductForm.tsx';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+
+const queryClient = new QueryClient()
+
+
 
 createRoot(document.getElementById('App')!).render(
   <StrictMode>
-    <AppProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* */}
-          <Route element={<WithNavbarLayout />}>
-            <Route path='/' element={<Main />} />
-            <Route path='/carrito' element={<Cart />} />
-            <Route path='/producto/:id' element={<ProductById />} />
-          </Route>
-
-          {/* */}
-          <Route element={<NoNavbarLayout />}>
-
-            <Route path="/checkout" element={<CheckoutLayout />}>
-              <Route index element={<CheckoutShipping />} />
+    <QueryClientProvider client={queryClient}>
+      <AppProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* */}
+            <Route element={<WithNavbarLayout />}>
+              <Route path='/' element={<Main />} />
+              <Route path='/carrito' element={<Cart />} />
+              <Route path='/producto/:id' element={<ProductById />} />
             </Route>
 
-            <Route path='*' element={<NotFound404 />} />
-          </Route>
+            {/* */}
+            <Route element={<NoNavbarLayout />}>
+              <Route path="/checkout" element={<CheckoutLayout />}>
+                <Route index element={<CheckoutShipping />} />
+              </Route>
+              
+              <Route path="/crearProducto" element={<CreateProductLayout />}>
+                <Route index element={<CreateProduct />} />
+                <Route path="form/:category" element={<CreateProductForm />} />
+              </Route>
 
-
-
-
-        </Routes>
-      </BrowserRouter>
-    </AppProvider>
+              <Route path='*' element={<NotFound404 />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AppProvider>
+    </QueryClientProvider>
   </StrictMode>,
 );

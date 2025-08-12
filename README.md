@@ -1,4 +1,4 @@
-# 🌐 **Entrega-3 - Informatorio 2025**  
+# 🌐 **Entrega-4 - Informatorio 2025**  
 
 Este repositorio contiene lo solicitado para la **Entrega-3** en la especialidad de **React** del Informatorio 2025.  
 
@@ -32,6 +32,17 @@ Para el proyecto se utilizó **Vite + React + TypeScript**, simulando parte del 
    /checkout  Simulación de compra
    Agregar page de 404
 
+---
+### 📌 **Características Etapa 4**  
+
+🛒 Ecommerce (Mercado Libre)
+ ✅ Obtener lista de productos desde servicio
+ ✅ Obtener detalle del producto (/producto/:id ) desde servicio
+ ✅ Agregar al carrito no necesita servicio (mantener el manejo de estado actual)
+ ✅ Mostrar estado de carga/error mientras se obtienen datos
+ ✅ Crear ruta nueva que permite crear productos usando hook
+
+ 
 ---
 ## 🛠️ **Requerimientos Técnicos**  
 

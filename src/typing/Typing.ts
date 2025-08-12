@@ -1,4 +1,27 @@
+export type PostProductProps = {
+    productNew: ProductDB;
+    category?: string;
+  }
 
+
+export type ProductDB = {
+  idProduct: number;
+  category: string;
+  description: string;
+  img: string;
+  colors: Array<string> ;
+  brands: Array<string>;
+  rating: number;
+  title: string;
+  price: number;
+  inStock: boolean;
+  prime: boolean;
+  previousPrice?: number;
+  priceInfo?: string;
+  shippingInfo?: string;
+  shippingPrice?: number;
+  by?: string;
+};
 
 export type ProductBase = {
   idProduct: number;
@@ -7,14 +30,17 @@ export type ProductBase = {
   title: string;
   price: number;
   units?: number;
+  previousPrice?: number;
+  priceInfo?: string;
+  shippingInfo?: string;
+  shippingPrice?: number;
+  by?: string;
 };
 
 export type ProductOnCartProps = ProductBase;
 
 export type ProductCardProps = ProductBase & {
-  previousPrice?: number;
-  priceInfo?: string;
-  shippingInfo?: string;
+
   onClickAdd?: () => void;
   onClickRemove?: () => void;
 };
@@ -75,3 +101,42 @@ export type FilterStateProps = [
 ];
 
 export type actionFilterProps = { type: FilterType; payload: string}
+
+
+// // TIPING THE FILTER BY CATEGORY
+// export type categoryFilterName = {
+//   type: FilterType.Category;
+//   name: string;
+// };
+
+// // TIPING THE FILTER BY PRICEMAX
+// export type PriceMaxFilter = {
+//   type: FilterType.PriceMax;
+//   max: number;
+// };
+
+// // TIPING THE FILTER BY PRICEMIN
+// export type PriceMinFilter = {
+//   type: FilterType.PriceMin;
+//   min: number;
+// };
+
+// // TIPING THE FILTER BY PRICEMIN
+// export type PromotionFilter = {
+//   type: FilterType.Promotion;
+//   id: string;
+// };
+
+
+
+
+
+// --------------------------------------------------------
+
+// // TIPING THE NAVBAR
+// export type NavbarProps = {
+// };
+
+// // TIPING THE MAIN
+// export type MainProps = {
+// };

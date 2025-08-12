@@ -23,7 +23,6 @@ const CartProvider = ({ children }: CartProviderProps) => {
 
   const resetCart = () => dispatch({ type: "RESET" });
 
-  console.log(state.productsInCart)
   return (
     <CartContext.Provider
       value={{

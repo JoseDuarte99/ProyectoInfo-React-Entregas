@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import CartContext from "../contexts/CartContext";
 
-import type {ProductBase} from "../typing/Typing";
+import type { ProductBase } from "../typing/Typing";
 import { Link } from "react-router";
 
 
@@ -19,14 +19,26 @@ function Cart () {
         throw new Error('useCart must be used within a CartProvider');
     }
 
-
-    const productsByType = [...new Set(productCart.contextState)];
     const productsAll = productCart.contextState;
+    const productsByType = productsAll.reduce((acc: ProductBase[], p: ProductBase) => {
+    if (!acc.some(item => item.idProduct === p.idProduct)) {
+        acc.push(p);
+    }
+    return acc;
+    }, []);
 
-    const totalPrice = productsAll
-    ? productsAll.reduce((acc, p) => acc + (p.price ?? 0), 0)
-    : 0;
+    const totalPriceProduct = productsAll
+        ? productsAll.reduce((acc, p) => acc + (p.price ?? 0), 0)
+        : 0;
 
+    const totalPriceShipping = productsByType
+        ? productsByType.reduce((acc, p) => acc + (p.shippingPrice ?? 0), 0)
+        : 0;
+    
+    const totalPrice = totalPriceProduct + totalPriceShipping;
+
+    console.log(productsAll)
+    console.log(productsByType)
     // RETURN -------------------------------------------------------------
     return (
         <main id="main">
@@ -42,9 +54,18 @@ function Cart () {
                     {/* DIV PRODUCT */}
                     <div>
                         {productsByType.map(p => 
-                            <CarProduct product={p}/>
+                            <CarProduct key={p.idProduct} product={p}/>
                         )}
                     </div>
+
+                { productsAll.length > 0
+                    ? <div className="flex justify-end">
+                        <button  onClick={productCart.resetCart} className="bg-neutral-200 text-neutral-500 font-semibold w-[10rem] h-[2.8rem] rounded-md cursor-pointer hover:bg-neutral-300">
+                                Vaciar carrito
+                        </button>
+                    </div>
+                    : <></>
+                }
 
                 </section>
 
@@ -53,11 +74,11 @@ function Cart () {
                         <h2 className=" font-semibold mb-[1rem] pl-[1.5rem] pr-[1.5rem]">Resumen de compra</h2>
                         <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] pt-5 border-t-1 border-neutral-200">
                             <p className="text-neutral-700 text-sm">Producto</p>
-                            <p className="text-neutral-700 text-sm">$ {totalPrice !== 0? totalPrice.toLocaleString('es-AR') : 0}</p>
+                            <p className="text-neutral-700 text-sm">$ {totalPriceProduct !== 0? totalPriceProduct.toLocaleString('es-AR') : 0}</p>
                         </div>
                         <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] mb-2 mt-2">
                             <p className="text-neutral-700 text-sm">Envío</p>
-                            <p className="text-neutral-700 text-sm">$ 0</p>
+                            <p className="text-neutral-700 text-sm">$ {totalPriceShipping !== 0? totalPriceShipping.toLocaleString('es-AR') : 0}</p>
                         </div>
 
                         <div className="flex flex-3 flex-row-[1fr_2fr_1f] pr-[1.5rem] justify-between pl-[1.5rem] pt-[1rem] mb-2 ">
@@ -76,6 +97,7 @@ function Cart () {
                             </button>
                         </Link>
                 </section>
+
             </div>
         </main>
     )
@@ -104,11 +126,15 @@ const CarProduct = (product :CarProductProps) => {
             {/* DISPLAY PRODUCT */}
             <section className="grid grid-cols-[2fr_7fr_2fr_4fr] gap-4 pt-[1.25rem] pb-[1.25rem] pl-[1.5rem] pr-[1.5rem]">
 
-                <img src={p.img} alt={p.title} className="w-20 h-20 object-contain rounded"/>
+                <Link to={`/producto/${p.idProduct}`} className="cursor-pointer">
+                    <img src={p.img} alt={p.title} className="w-20 h-20 object-contain rounded"/>
+                </Link>
                 <div>
-                    <h3 className="text-sm font-semibold text-gray-800">{p.title}</h3>
+                    <Link to={`/producto/${p.idProduct}`} className="cursor-pointer">
+                        <h3 className="text-sm font-semibold text-gray-800">{p.title}</h3>
+                    </Link>
                     <button
-                        onClick={() => productCart.addProductCart([p])}
+                        onClick={() => productCart.removeProductCart([p])}
                         className="text-xs text-blue-600 hover:underline mt-1"
                     >
                         Eliminar
@@ -126,7 +152,11 @@ const CarProduct = (product :CarProductProps) => {
                 </div>
                 <div className="justify-self-end">
                     <h4 className="text-2xl text-gray-800">${p.price.toLocaleString('es-AR')}</h4>
-                    <p className="text-[0.6rem] text-neutral-500 font-bold">Precio por unidad</p>
+                    <p className="text-[0.6rem] text-neutral-500 font-bold text-center">Precio por unidad</p>
+                    { p.shippingPrice
+                        ? <p className="pt-2 text-[0.6rem] text-neutral-500 font-bold text-center"><span className="font-semibold">Costo de envío:</span> $ {p.shippingPrice}  </p>
+                        : <p className="pt-2 font-medium text-[0.8rem] text-green-600 text-center"> Envío Gratis</p>
+                    }
                 </div>
 
             </section> 
