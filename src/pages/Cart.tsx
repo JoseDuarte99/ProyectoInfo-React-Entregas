@@ -19,9 +19,13 @@ function Cart () {
         throw new Error('useCart must be used within a CartProvider');
     }
 
-    const productsByType = [...new Set(productCart.contextState)];
-
     const productsAll = productCart.contextState;
+    const productsByType = productsAll.reduce((acc: ProductBase[], p: ProductBase) => {
+    if (!acc.some(item => item.idProduct === p.idProduct)) {
+        acc.push(p);
+    }
+    return acc;
+    }, []);
 
     const totalPriceProduct = productsAll
         ? productsAll.reduce((acc, p) => acc + (p.price ?? 0), 0)
@@ -33,6 +37,8 @@ function Cart () {
     
     const totalPrice = totalPriceProduct + totalPriceShipping;
 
+    console.log(productsAll)
+    console.log(productsByType)
     // RETURN -------------------------------------------------------------
     return (
         <main id="main">

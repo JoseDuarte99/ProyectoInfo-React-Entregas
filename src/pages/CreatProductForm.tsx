@@ -3,7 +3,8 @@ import { Link, useNavigate, useParams } from "react-router";
 import type { ProductDB } from "../typing/Typing";
 import { ButtonCustom } from "../components/components";
 import imgIcon from "../assets/LogoMeLi.svg";
-// import { productsDB } from "../data/db";
+import { productService } from "../data/services";
+import { useMutation } from "@tanstack/react-query";
 
 
 export default function CreateProductForm() {
@@ -51,27 +52,33 @@ export default function CreateProductForm() {
         [name]: value.split(",").map((v) => v.trim()),
         }));
     };
+    
+    
+    // -------------------------------------------------------------------------------------------------------------
+    // -------------------------- IMPLEMENTANDO SERVICIOS CON REACT QUERY USE-MUTATION-------------------------------
+    
+
+    const mutation = useMutation({
+        mutationFn: productService.postProduct
+    })
+
+    
+    
+    // -------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------------
+    
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        const productLocal = localStorage.getItem("productLocal");
-        const productStorage = productLocal ? JSON.parse(productLocal) : [];
-
-        const nextId = 37 + productStorage.length + 1;
-
-        const newProduct = {
-            ...product,
-            idProduct: nextId,
-            category: capitalize(category ?? ""),
-            by: "Tu producto"
-        };
-
-        productStorage.push(newProduct);
-        localStorage.setItem("productLocal", JSON.stringify(productStorage));
-
+        // ----- IMPLEMENTANDO SERVICIOS CON REACT QUERY USE-MUTATION -----------
+        mutation.mutate({
+            productNew: product,
+            category: category ?? "",
+        })
+            
         setProduct({
-            idProduct: nextId,
+            idProduct: 0,
             category: category ?? "",
             description: "",
             img: "",

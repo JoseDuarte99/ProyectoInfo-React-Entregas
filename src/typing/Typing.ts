@@ -1,3 +1,9 @@
+export type PostProductProps = {
+    productNew: ProductDB;
+    category?: string;
+  }
+
+
 export type ProductDB = {
   idProduct: number;
   category: string;

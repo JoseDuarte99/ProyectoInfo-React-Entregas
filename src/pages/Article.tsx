@@ -252,27 +252,7 @@ export function Main() {
                     }
 
 
-                {myProducts?.length > 0 
-                    &&<Section titleSection = {<TitleSection title="Tus productos" />}>
-                        {
-                        myProducts.map(product => (
-                            <ProductCard 
-                                key={product.idProduct}
-                                idProduct={product.idProduct}
-                                category={product.category}
-                                img={product.img}
-                                title={product.title}
-                                previousPrice={product.previousPrice}
-                                price={product.price}
-                                priceInfo={product.priceInfo}
-                                shippingInfo={product.shippingInfo}
-                                onClickAdd={() => productCart.addProductCart([product])}
-                                onClickRemove={() => productCart.removeProductCart([product])}
-                                units={productCart.contextState.filter(p => p.idProduct === product.idProduct).length}
-                                by={product.by}
-                            />
-                        ))}
-                        </Section>}
+
 
         {/* TERNARIO ---------------------------------------------------------------------------------------- */}
                 {filteringState || categoryFilterName || promotionFilter
@@ -305,6 +285,28 @@ export function Main() {
                         })}
                         </Section>
                     : <>
+                {myProducts?.length > 0 
+                    &&<Section titleSection = {<TitleSection title="Tus productos" />}>
+                        {
+                        myProducts.map(product => (
+                            <ProductCard 
+                                key={product.idProduct}
+                                idProduct={product.idProduct}
+                                category={product.category}
+                                img={product.img}
+                                title={product.title}
+                                previousPrice={product.previousPrice}
+                                price={product.price}
+                                priceInfo={product.priceInfo}
+                                shippingInfo={product.shippingInfo}
+                                onClickAdd={() => productCart.addProductCart([product])}
+                                onClickRemove={() => productCart.removeProductCart([product])}
+                                units={productCart.contextState.filter(p => p.idProduct === product.idProduct).length}
+                                by={product.by}
+                            />
+                        ))}
+                        </Section>}
+
                     {sections.map(({ title, link, keyMin, keyMax, key }) => (
                         <Section key={key} titleSection={<TitleSection title={title} link={link} />}>
                         {productsForDisplay

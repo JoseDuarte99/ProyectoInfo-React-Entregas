@@ -1,9 +1,10 @@
 
-import type { ProductDB } from '../typing/Typing';
+import type { PostProductProps, ProductDB } from '../typing/Typing';
 import { productsDB, categories } from './db';
 
 type Filters = {priceRange: {max: number, min: number}, primeOnly?: boolean, colors: string, brands:Array<string>, rating:number ,inStock?:boolean, }
 type Options = {filters: Filters, sortBy: string, category: string, searchQuery: string; limit:number, offset:number}
+
 
 // Simulate API delay
 const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -74,6 +75,33 @@ export const productService = {
   async getCategories() {
     await delay(100);
     return [...categories];
+  },
+
+
+
+  // POST product 
+  async postProduct({productNew, category}: PostProductProps): Promise<ProductDB> {
+    await delay(100);
+    
+        const capitalize = (text: string) =>
+        text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+
+        const productLocal = localStorage.getItem("productLocal");
+        const productStorage = productLocal ? JSON.parse(productLocal) : [];
+
+        const nextId = 37 + productStorage.length + 1;
+
+        const newProduct: ProductDB = {
+            ...productNew,
+            idProduct: nextId,
+            category: capitalize(category ?? ""),
+            by: "Tu producto"
+        };
+
+        productStorage.push(newProduct);
+        localStorage.setItem("productLocal", JSON.stringify(productStorage));
+
+  return newProduct
   },
 
   // Search products with optional filters and sorting
